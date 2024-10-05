@@ -76,8 +76,10 @@ const nodeGenerator = function* () {
 
 const myNodeGenerator = nodeGenerator();
 myNodeGenerator.next();
-//  { value: 1, done: true } 遇到yeild的时候暂停了
-myNodeGenerator.next();
+//  { value: '1', done: false } 遇到yield的时候暂停了
+const temp =  myNodeGenerator.next();
+console.log(temp.value, '== myNodeGenerator.next() value', temp.done, '== myNodeGenerator.next() done')
+//  { value: undefined, done: true }
 
 http
   .createServer((req, res) => {
