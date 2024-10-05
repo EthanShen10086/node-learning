@@ -29,9 +29,12 @@ fs.readFile(
   }
 );
 
-const EventEmitter = require("events");
-class MyEmitter extends EventEmitter {}
-const myEmitter = new MyEmitter();
+// const EventEmitter = require("events");
+// class MyEmitter extends EventEmitter {}
+// const myEmitter = new MyEmitter();
+// 或者
+const EventEmitter = require("events").EventEmitter;
+const myEmitter = new EventEmitter();
 // 创建MyEmitter并且去监听event事件
 // 事件流的写法
 myEmitter.on("event", (err, data) => {
