@@ -67,6 +67,18 @@ myEmitter.on("event", (err, data) => {
 myEmitter.emit("event", null, "Hello World");
 myEmitter.emit("event", new Error("myEmitter Error"), null);
 
+// 箭头函数使用不了 generator 生成器
+const nodeGenerator = function* () {
+  console.log("nodeGenerator 1");
+  yield 1;
+  console.log("nodeGenerator 2");
+};
+
+const myNodeGenerator = nodeGenerator();
+myNodeGenerator.next();
+//  { value: 1, done: true } 遇到yeild的时候暂停了
+myNodeGenerator.next();
+
 http
   .createServer((req, res) => {
     res.writeHead(200, { "Content-type": "text/plain" });
