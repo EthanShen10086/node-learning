@@ -2,8 +2,48 @@ const http = require("http");
 // require("./hello-world")('yyh');
 const sayHello = require("./hello-world");
 sayHello.sayHello("yyh");
-sayHello.sayBadWord('test')
+sayHello.sayBadWord("test");
 
+const a = require("./a");
+const b = require("./b");
+console.log("in main, a.done=%j, b.done=%j", a.done, b.done);
+const isFile = false;
+const fs = require("fs");
+// 这里utf-8不是必须的
+fs.readFile(
+  `${isFile ? "/path/to/file" : "./a-file.js"}`,
+  "utf8",
+  (err, data) => {
+    // Error-first Callback
+    if (err) {
+      console.error("Error reading file: ", err);
+      return;
+    }
+    // 这里的打印是异步的 如果你打印的是js代码就会把整个文件打印出来
+    console.log(
+      "read a.js, data=%j",
+      data,
+      "\n== File Content: ",
+      data.toString()
+    );
+  }
+);
+
+const EventEmitter = require("events");
+class MyEmitter extends EventEmitter {}
+const myEmitter = new MyEmitter();
+// 创建MyEmitter并且去监听event事件
+// 事件流的写法
+myEmitter.on("event", (err, data) => {
+  if (err) {
+    console.error("myEmitter error: ", err);
+  }
+  console.log(data, "== myEmitter data");
+});
+
+// 触发事件 如果是有error first callback 之后传递的才是数据
+myEmitter.emit("event", null, "Hello World");
+myEmitter.emit("event", new Error("myEmitter Error"), null);
 
 http
   .createServer((req, res) => {
