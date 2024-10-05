@@ -29,6 +29,25 @@ fs.readFile(
   }
 );
 
+const openFileByPromise = (filePath) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, (err, res) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(res.toString());
+    });
+  });
+};
+
+openFileByPromise("./README.md")
+  .then((data) => {
+    console.log(data, "== openFileByPromise data");
+  })
+  .catch((err) => {
+    console.error(err, "== openFileByPromise err");
+  });
+
 // const EventEmitter = require("events");
 // class MyEmitter extends EventEmitter {}
 // const myEmitter = new MyEmitter();
