@@ -45,8 +45,8 @@ router.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist/index.html"));
 });
 
-// 添加静态路由的router
-app.use(router); // Add this line to use the router
+// 添加静态server的router
+app.use(router);
 
 app.get("/add", (req, res) => {
   res.end("res from add");
