@@ -33,6 +33,8 @@ const http = require("http");
 const express = require("express");
 const app = express();
 const path = require("path");
+const cors = require("cors");
+app.use(cors()); // 使用 CORS 中间件
 // i5ting的教程里面有open模块 但是open模块已经不再支持cjs 只支持es
 // 设置静态文件目录为当前目录下的 dist 文件夹。
 // __dirname 是 nodejs 内置的全局变量，表示当前执行脚本所在的目录。
@@ -40,28 +42,65 @@ const path = require("path");
 // app.use(express.static(path.join(__dirname, "dist")));
 
 const router = express.Router();
+// 只处理static 静态文件
 router.use(express.static(path.join(__dirname, "dist")));
-router.get("/*", (req, res) => {
+router.get("/*", (req, res, next) => {
+  // 除了可以直接使用index.html文件也可以自己使用预处理器写网页然后直接渲染
+  // 下面是路由
+  // const routes = require('./routes/index');
+  // var users = require('./routes/users');
+  //   var router = express.Router();
+  /* GET home page. */
+  // router.get('/', function(req, res, next) {
+  //     res.render('index', { title: 'Express' });
+  //   });
+
   res.sendFile(path.join(__dirname, "dist/index.html"));
 });
+
+// router.get("/", (req, res, next) => {
+//   if (req.url === "/") {
+//     res.end("root res");
+//   } else {
+//     next();
+//   }
+// });
+
+const apiServer = express.Router();
+apiServer.get("/getUser", (req, res) => {
+  console.log(req, "== 进来了吗");
+  // ✨ 如果利用res.end 那么在devtool里面就不会展示东西
+  // 1. res.json():
+  // 这个方法用于发送 JSON 响应。它会自动设置响应的 Content-Type 为 application/json。
+  // 如果你没有显式设置状态码，Express 会默认返回状态码 200，但在某些情况下（例如，使用中间件或其他逻辑），可能会返回 304 Not Modified，这通常与缓存相关。
+  // 2. res.send():
+  // 这个方法可以发送任意类型的响应，包括字符串、对象、Buffer 等。它会根据传入的内容自动设置 Content-Type。
+  // 同样，如果没有显式设置状态码，默认也是 200。
+  // 设置了200 devtool还是304那么就是有缓存
+  res.status(200).json({
+    // 使用 res.json() 直接返回 JSON
+    data: {
+      msg: "hello world yyh",
+    },
+  });
+  // res.end(
+  //   JSON.stringify({
+  //     data: {
+  //       msg: "hello world yyh",
+  //     },
+  //   })
+  // );
+});
+
+// 以api开头的匹配这个路由即/api/getUser
+// api server应该在static server之前 不然的话接口匹配不了
+app.use("/api", apiServer);
 
 // 添加静态server的router
 app.use(router);
 
-app.get("/add", (req, res) => {
-  res.end("res from add");
-});
-
-app.get((req, res, next) => {
-  if (req.url === "/") {
-    res.end("res from root");
-  } else {
-    next();
-  }
-});
-
 app.get((req, res) => {
-  res.end("res from no router");
+  res.end("res from no router / no api");
 });
 
 app.listen(3000);
@@ -71,3 +110,6 @@ app.listen(3000);
 //     console.log(`Server is running on port ${PORT}`);
 //     open(`http://127.0.0.1:${PORT}`);
 // });
+// 可以使用包+cli直接open
+// npm i -g http-server
+// http-server . -p 8080 -o
