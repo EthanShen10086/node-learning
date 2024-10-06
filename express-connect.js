@@ -109,7 +109,7 @@ apiServer.get("/getUser", (req, res) => {
   // );
 });
 
-apiServer.post("/getUser", (req, res) => {
+apiServer.post("/add", (req, res) => {
   console.log(req.body);
   res.json(req.body)
 })
