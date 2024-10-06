@@ -34,7 +34,15 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const cors = require("cors");
-app.use(cors()); // 使用 CORS 中间件
+const bodyParser = require("body-parser");
+// for parsing application/json
+app.use(bodyParser.json());
+// for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+// 使用 CORS 中间件
+app.use(cors());
+
+
 // i5ting的教程里面有open模块 但是open模块已经不再支持cjs 只支持es
 // 设置静态文件目录为当前目录下的 dist 文件夹。
 // __dirname 是 nodejs 内置的全局变量，表示当前执行脚本所在的目录。
@@ -78,7 +86,6 @@ apiServer.get("/getUser", (req, res) => {
   // app.get('/api/getUser',(req, res))
   // 保持原样
   // const { name, age } = req.query;
-  console.log(req, "== 进来了吗");
   // ✨ 如果利用res.end 那么在devtool里面就不会展示东西
   // 1. res.json():
   // 这个方法用于发送 JSON 响应。它会自动设置响应的 Content-Type 为 application/json。
@@ -101,6 +108,12 @@ apiServer.get("/getUser", (req, res) => {
   //   })
   // );
 });
+
+apiServer.post("/getUser", (req, res) => {
+  console.log(req.body);
+  res.json(req.body)
+})
+
 
 // 以api开头的匹配这个路由即/api/getUser
 // api server应该在static server之前 不然的话接口匹配不了
