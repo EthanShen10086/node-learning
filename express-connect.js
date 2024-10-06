@@ -68,12 +68,15 @@ router.get("/*", (req, res, next) => {
 
 const apiServer = express.Router();
 
+// apiServer.get("/getUser:id", (req, res) => {})
 // 这段代码 :id是动态参数 表示可以接受任意id值 用req.params.id
 // params 用于提取路径中动态部分即是 https://xxx.xxxx.com/api/getUser/1234
 // query 用来提取查询参数及 ?name=XXX&age=XXX
-// apiServer.get("/getUser:id", (req, res) => {})
+
 apiServer.get("/getUser", (req, res) => {
   // 如果是https://xxx.xxxx.com/api/getUser?name=yyh&age=18
+  // app.get('/api/getUser',(req, res))
+  // 保持原样
   // const { name, age } = req.query;
   console.log(req, "== 进来了吗");
   // ✨ 如果利用res.end 那么在devtool里面就不会展示东西
